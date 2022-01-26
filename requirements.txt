@@ -1,5 +1,5 @@
 streamlit==1.4.0
 numpy
 matplotlib
-pyautogui
+pyautogui==0.9.53
 nmrglue
