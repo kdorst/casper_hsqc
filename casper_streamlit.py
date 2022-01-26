@@ -34,6 +34,9 @@ with info:
     st.text('Upload your experimental and predicted NMR chemical shifts as .txt files.')
     st.text('The files should have the format: 13C space 1H, eg. 101.50 4.65.')
     st.text('Use a new line for each signal.')
+    st.text('An example file can be downloaded by clicking the button below.')
+
+    st.download_button(label='Download example file', file_name='shifts.txt')
     
 #    if info.button('Clear the Files and reset the app.', help="Resets the app."):
         #session_state.state = str(randint(1000, 100000000))
