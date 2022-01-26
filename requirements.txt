@@ -1,0 +1,5 @@
+streamlit==1.4.0
+numpy
+matplotlib
+pyautogui
+nmrglue
