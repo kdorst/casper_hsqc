@@ -8,10 +8,11 @@ Created on Tue Nov 16 09:17:58 2021
 import streamlit as st
 import numpy as np
 from matplotlib import pyplot as plt
-import pyautogui
+#import pyautogui
 import nmrglue as ng
 from matplotlib.ticker import FormatStrFormatter
-
+from random import randint
+import SessionState
 
 header = st.container()
 info = st.container()
@@ -21,7 +22,7 @@ plot_setup = st.container()
 plot = st.container()
 
 
-
+session_state = SessionState.get(state=0)
 
 
 with header:
@@ -32,8 +33,8 @@ with info:
     st.subheader('Introduction')
     st.text('This is a description.')
     
-    if info.button('Reset the app.', help="Resets the app."):
-        pyautogui.hotkey("ctrl","F5")  
+    if info.button('Clear the Files and reset the app.', help="Resets the app."):
+        session_state.state = str(randint(1000, 100000000))
 
     st.subheader('Upload your files below!')
     
