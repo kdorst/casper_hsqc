@@ -31,8 +31,9 @@ with header:
     
 with info:
     st.subheader('Introduction')
-    st.text('Upload your experimental and predicted NMR chemical shifts as .txt files. The files should have the format: 13C space 1H, eg. 101.50 4.65.'
-            'Use a new line for each signal.')
+    st.text('Upload your experimental and predicted NMR chemical shifts as .txt files.')
+    st.text('The files should have the format: 13C space 1H, eg. 101.50 4.65.')
+    st.text('Use a new line for each signal.')
     
 #    if info.button('Clear the Files and reset the app.', help="Resets the app."):
         #session_state.state = str(randint(1000, 100000000))
