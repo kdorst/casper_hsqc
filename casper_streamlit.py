@@ -46,12 +46,12 @@ with upload:
     exp_data_upload = left_col.file_uploader('Upload experimental NMR Chemical Shifts', type=['txt'], accept_multiple_files=False, key='exp_data', help='Here you can upload '
                             'your experimental NMR chemical shifts')
     
-    exp_data = np.recfromtxt(exp_data_upload)
+    
     
     pred_data_upload = right_col.file_uploader('Upload predicted NMR Chemical Shifts', type=['txt'], accept_multiple_files=False, key='pred_data', help='Here you can upload '
                             'your predicted NMR chemical shifts')
     
-    pred_data = np.recfromtxt(pred_data_upload)
+    
     
     #st.write(type(exp_data))
     #st.write(type(pred_data_upload))
@@ -67,7 +67,10 @@ if exp_data_upload and pred_data_upload is not None:
         
         
     with plot:
-               
+        
+        exp_data = np.recfromtxt(exp_data_upload)
+        pred_data = np.recfromtxt(pred_data_upload)
+        
         udic = {
         'ndim': 2,
         0: {'car': 1700.00,
