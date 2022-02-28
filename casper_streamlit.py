@@ -8,7 +8,7 @@ Created on Tue Nov 16 09:17:58 2021
 import streamlit as st
 import numpy as np
 from matplotlib import pyplot as plt
-import pyautogui
+#import pyautogui
 import nmrglue as ng
 from matplotlib.ticker import FormatStrFormatter
 
@@ -32,8 +32,8 @@ with info:
     st.subheader('Introduction')
     st.text('This is a description.')
     
-    if info.button('Reset the app.', help="Resets the app."):
-        pyautogui.hotkey("ctrl","F5")  
+#    if info.button('Reset the app.', help="Resets the app."):
+#        pyautogui.hotkey("ctrl","F5")  
 
     st.subheader('Upload your files below!')
     
