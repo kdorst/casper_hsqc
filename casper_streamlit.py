@@ -8,11 +8,10 @@ Created on Tue Nov 16 09:17:58 2021
 import streamlit as st
 import numpy as np
 from matplotlib import pyplot as plt
-#import pyautogui
+import pyautogui
 import nmrglue as ng
 from matplotlib.ticker import FormatStrFormatter
-#from random import randint
-#import SessionState
+
 
 header = st.container()
 info = st.container()
@@ -22,7 +21,7 @@ plot_setup = st.container()
 plot = st.container()
 
 
-#session_state = SessionState.get(state=0)
+
 
 
 with header:
@@ -31,15 +30,10 @@ with header:
     
 with info:
     st.subheader('Introduction')
-    st.text('Upload your experimental and predicted NMR chemical shifts as .txt files.')
-    st.text('The files should have the format: 13C space 1H, eg. 101.50 4.65.')
-    st.text('Use a new line for each signal.')
-    #st.text('An example file can be downloaded by clicking the button below.')
-
-    #st.download_button(label='Download example file', file_name='shifts.txt')
+    st.text('This is a description.')
     
-#    if info.button('Clear the Files and reset the app.', help="Resets the app."):
-        #session_state.state = str(randint(1000, 100000000))
+    if info.button('Reset the app.', help="Resets the app."):
+        pyautogui.hotkey("ctrl","F5")  
 
     st.subheader('Upload your files below!')
     
@@ -67,9 +61,10 @@ if exp_data_upload and pred_data_upload is not None:
     with plot_setup:
         st.subheader('Please specify the plotting option below.')
         location_legend = plot.selectbox('Where should the legend be displayed?', ('upper left', 'upper center', 'upper right', 'lower left', 'lower center', 'lower right'))
-        x_values = st.slider('Select your ppm range in proton.', 0.0, 10.0, (6.0,3.0), step=0.05)
-        y_values = st.slider('Select your ppm range in carbon.', 0, 120, (110,0), step=1)
-        
+        x_values = st.slider('Select your ppm range in proton.', 0.0, 10.0, (6.0,3.0), step=0.5)
+        y_values = st.slider('Select your ppm range in carbon.', 0, 120, (110,0), step=10)
+        width = st.number_input('Width of plot in inches', min_value=1, max_value=20, value=4, step=1)
+        height = st.number_input('Height of plot in inches', min_value=1, max_value=20, value=4, step=1)
         
         
     with plot:
@@ -119,8 +114,8 @@ if exp_data_upload and pred_data_upload is not None:
             uc_13C = ng.sparky.make_uc(dic, None, 0)
             uc_1H = ng.sparky.make_uc(dic, None, 1)
         
-            lw_13C = 1.0    # 13C dimension linewidth in points
-            lw_1H = 3.0    # 1H dimension linewidth in points
+            lw_13C = 4.0    # 13C dimension linewidth in points
+            lw_1H = 2.0    # 1H dimension linewidth in points
         
             params = []
             for ppm_13C, ppm_1H in peak_list:
@@ -147,7 +142,7 @@ if exp_data_upload and pred_data_upload is not None:
         cl = contour_start * contour_factor ** np.arange(contour_num)
         
         # create the figure
-        fig = plt.figure()
+        fig = plt.figure(figsize=(width, height))
         ax = fig.add_subplot(111)
         
         dic, data = ng.sparky.read('exp.ucsf')
@@ -158,8 +153,8 @@ if exp_data_upload and pred_data_upload is not None:
         uc_y = ng.sparky.make_uc(dic, data, dim=0)
         y0, y1 = uc_y.ppm_limits()
         
-        cntr1 = ax.contour(data, cl, colors='blue', extent=(x0, x1, y0, y1), linewidths=.2, alpha=.7)
-        cntr2 = ax.contour(data_1, cl, colors='red', extent=(x0, x1, y0, y1), linewidths=.2, alpha=.7)
+        cntr1 = ax.contour(data, cl, colors='blue', extent=(x0, x1, y0, y1), linewidths=.2, alpha=.9)
+        cntr2 = ax.contour(data_1, cl, colors='red', extent=(x0, x1, y0, y1), linewidths=.2, alpha=.9)
         h1,_ = cntr1.legend_elements()
         h2,_ = cntr2.legend_elements()
         leg = ax.legend([h1[0], h2[0]], ['Experimental', 'CASPER'], loc=location_legend, framealpha=.5, fancybox=True)
@@ -171,6 +166,7 @@ if exp_data_upload and pred_data_upload is not None:
         ax.set_xlim(x_values[1], x_values[0])
         ax.set_ylim(y_values[1], y_values[0])
         ax.xaxis.set_major_formatter(FormatStrFormatter('%.2f'))    
+        plt.tight_layout()
         
         for line in leg.get_lines():
             line.set_linewidth(3.0)
@@ -179,6 +175,8 @@ if exp_data_upload and pred_data_upload is not None:
         st.write(fig)
         plt.savefig('plot.png', dpi=600)
         plt.savefig('plot.svg', dpi=600)
+        plt.savefig('plot.eps', dpi=600)
+        plt.savefig('plot.pdf', dpi=600)
         
         
         with open('plot.png', 'rb') as file:
@@ -192,7 +190,20 @@ if exp_data_upload and pred_data_upload is not None:
                                      data=file,
                                      file_name='plot.svg',
                                      mime='image/svg')        
+            
+        with open('plot.eps', 'rb') as file:
+            btn = st.download_button(label='Download plot as eps.',
+                                     data=file,
+                                     file_name='plot.eps',
+                                     mime='image/eps')      
       
+        with open('plot.pdf', 'rb') as file:
+            btn = st.download_button(label='Download plot as pdf.',
+                                     data=file,
+                                     file_name='plot.pdf',
+                                     mime='image/pdf')      
+
+
 else:
     st.subheader('No data uploaded. Please upload your data.')
     
